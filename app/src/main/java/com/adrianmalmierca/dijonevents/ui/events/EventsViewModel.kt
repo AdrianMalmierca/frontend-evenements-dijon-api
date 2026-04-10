@@ -31,7 +31,6 @@ class EventsViewModel @Inject constructor(
         loadEvents()
         loadFavorites()
     }
-
     fun loadEvents(keyword: String? = null) {
         viewModelScope.launch { //coroutine linked to the lifecycle of the vm
             _uiState.value = _uiState.value.copy(isLoading = true) //spiner in the UI
@@ -74,4 +73,8 @@ class EventsViewModel @Inject constructor(
     }
 
     fun isFavorite(uid: String) = _uiState.value.favorites.any { it.uid == uid }
+
+    fun clearSearch() {
+        loadEvents(keyword = null)
+    }
 }

@@ -26,6 +26,10 @@ fun EventsListScreen(viewModel: EventsViewModel, onNavigateToDetail: (String) ->
     //collectAsState: Transforms the `Flow` into a Compose State
     val uiState by viewModel.uiState.collectAsState() //listen the vm state and give me the actual value, recharging the ui
     var searchQuery by remember { mutableStateOf("") } //Keeps the text of the textfield as reactive and it keeps
+    
+    LaunchedEffect(Unit) {
+        viewModel.loadEvents(keyword = null)
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         OutlinedTextField(
