@@ -13,22 +13,22 @@ Native Android application for discovering cultural events in Dijon and the Burg
 
 ## Screenshots
 ### Main screen
-This is the main page where you can see all the events
+This is the main page where you can see all the events.
 
 <img src="assets/Main.png" alt="Main" width="300"/>
 
 ### Detail screen
-When you click on a card, you can see all the information about an event
+When you click on a card, you can see all the information about an event.
 
 <img src="assets/Detail.png" alt="Detail" width="300"/>
 
 ### Favourites screen
-You can see all your events added to favourites in the page Favourites
+You can see all your events added to favourites in the page Favourites.
 
 <img src="assets/Favs.png" alt="Favourite" width="300"/>
 
 ### Search screen
-You can search an event by name
+You can search an event by name.
 
 <img src="assets/Search.png" alt="Search" width="300"/>
 
