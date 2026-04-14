@@ -25,13 +25,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // Base URL del backend — cambia a tu IP local para emulador/dispositivo real
-        // Para emulador Android: 10.0.2.2 apunta a localhost del host
         buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8080/\"")
-
-        // Para dispositivo físico en la misma red WiFi, usa tu IP local:
-        // buildConfigField("String", "BASE_URL", "\"http://192.168.x.x:8080/\"")
 
         manifestPlaceholders["MAPS_API_KEY"] = localProperties.getProperty("MAPS_API_KEY") ?: ""
     }

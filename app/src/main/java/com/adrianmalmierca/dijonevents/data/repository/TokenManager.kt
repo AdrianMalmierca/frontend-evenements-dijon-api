@@ -15,7 +15,8 @@ import javax.inject.Singleton
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth_prefs")
 
 @Singleton
-class TokenManager @Inject constructor(
+class TokenManager @Inject constructor(/*@Inject to indicate this class can be built automatically
+hilt resolves the dependencies, like context. Is to avoid to create object manually*/
     @ApplicationContext private val context: Context
 ) {
     companion object {
@@ -24,6 +25,8 @@ class TokenManager @Inject constructor(
         val USER_EMAIL_KEY = stringPreferencesKey("user_email")
     }
 
+    /* Flow because if the token changes(login, logout, refresh): each part of the app that makes collect of the flow
+     receives the new value automatically */
     val token: Flow<String?> = context.dataStore.data.map { it[TOKEN_KEY] }
 
     suspend fun saveAuth(token: String, name: String, email: String) {

@@ -397,15 +397,15 @@ public final class DaggerDijonEventsApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_adrianmalmierca_dijonevents_ui_events_EventsViewModel = "com.adrianmalmierca.dijonevents.ui.events.EventsViewModel";
-
       static String com_adrianmalmierca_dijonevents_ui_auth_AuthViewModel = "com.adrianmalmierca.dijonevents.ui.auth.AuthViewModel";
 
-      @KeepFieldType
-      EventsViewModel com_adrianmalmierca_dijonevents_ui_events_EventsViewModel2;
+      static String com_adrianmalmierca_dijonevents_ui_events_EventsViewModel = "com.adrianmalmierca.dijonevents.ui.events.EventsViewModel";
 
       @KeepFieldType
       AuthViewModel com_adrianmalmierca_dijonevents_ui_auth_AuthViewModel2;
+
+      @KeepFieldType
+      EventsViewModel com_adrianmalmierca_dijonevents_ui_events_EventsViewModel2;
     }
   }
 
