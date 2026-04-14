@@ -47,6 +47,11 @@ You can see more visual where are the events. Don't appear all the events cause 
 
 <img src="assets/Map.png" alt="Map" width="300"/>
 
+### Map screen detail
+If you click on one of the points in the map, you'll see the informatión of that event.
+
+<img src="assets/Mapdetail.png" alt="Map" width="300"/>
+
 ---
 
 ## Problem Statement
@@ -261,10 +266,8 @@ api.getFavorites("Bearer $token")
 - **Error handling UI** — user-friendly error messages instead of raw error strings
 
 ### Medium Term
-- **Push notifications** — remind users of upcoming favourited events via FCM
 - **Filter by category** — chip filters for concert, exposition, sport, gastronomie
 - **Event sharing** — share event details via Android share sheet
-- **Widgets** — Glance API widget showing next favourited event on the home screen
 
 ### Long Term
 - **iOS version** — SwiftUI companion app targeting the same backend ([Ledgerly](https://github.com/AdrianMalmierca/ledgerly) demonstrates iOS native skills)

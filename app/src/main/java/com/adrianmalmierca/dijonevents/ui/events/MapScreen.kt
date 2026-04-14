@@ -12,7 +12,6 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
-// Centro de Dijon
 private val DijonCenter = LatLng(47.3220, 5.0415)
 
 @Composable
@@ -46,7 +45,6 @@ fun MapScreen(viewModel: EventsViewModel) {
                 }
         }
 
-        // Info card del evento seleccionado
         selectedEvent?.let { event ->
             Card(
                 modifier = Modifier

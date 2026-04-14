@@ -1,4 +1,4 @@
-#Tue Apr 14 10:42:32 CEST 2026
+#Tue Apr 14 12:42:01 CEST 2026
 base.0=/Users/administrador/Documents/Profesional/proyectos/dijon-events-android/app/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
 base.1=/Users/administrador/Documents/Profesional/proyectos/dijon-events-android/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
 base.10=/Users/administrador/Documents/Profesional/proyectos/dijon-events-android/app/build/intermediates/dex/debug/mergeExtDexDebug/classes2.dex

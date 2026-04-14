@@ -1,10 +1,8 @@
 package com.adrianmalmierca.dijonevents
 
-import android.R.attr.type
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -74,6 +72,8 @@ fun DijonEventsNavHost() {
     LaunchedEffect(isLoggedIn) {
         if (isLoggedIn) {
             navController.navigate(Screen.Events.route) {
+                /*In rememberNavController it hasn't finished yet, and  currentBackStackEntryAsState doesn't have value yet
+                 so navBackStackEntry = null*/
                 popUpTo(navController.graph.findStartDestination().id) { inclusive = true } //we get the destination root and we include the destiny too
                 //To navigate to Events and delete everything before
                 //cause if we're in events and we go back, we can go to log in, and we don't want that, so to avoid that situation
@@ -126,7 +126,7 @@ fun DijonEventsNavHost() {
             }
         }
     ) { paddingValues ->
-        NavHost(
+        NavHost( //to define which screens exist and which one is shown depending the actual route
             navController = navController,
             startDestination = if (isLoggedIn) Screen.Events.route else Screen.Login.route,
             modifier = Modifier.padding(paddingValues)
@@ -162,6 +162,7 @@ fun DijonEventsNavHost() {
                 route = "detail/{uid}",
                 arguments = listOf(navArgument("uid") { type = NavType.StringType })
             ) { backStackEntry ->
+                //takes the uid from the url, si es null, sales del composable
                 val uid = backStackEntry.arguments?.getString("uid") ?: return@composable
                 EventDetailScreen(
                     uid = uid,
