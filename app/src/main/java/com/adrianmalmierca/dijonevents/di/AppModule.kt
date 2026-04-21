@@ -34,8 +34,8 @@ object AppModule {
             level = HttpLoggingInterceptor.Level.BODY
         }) //to take HTTP requests and responses
         //to avoid infinity blocks:
-        .connectTimeout(30, TimeUnit.SECONDS) //max time to connect
-        .readTimeout(30, TimeUnit.SECONDS) //max time ro receive a response
+        .connectTimeout(90, TimeUnit.SECONDS) //max time to connect
+        .readTimeout(90, TimeUnit.SECONDS) //max time ro receive a response
         .build()
 
     @Provides
