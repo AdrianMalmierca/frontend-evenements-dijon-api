@@ -13,7 +13,7 @@ Native Android application for discovering cultural events in Dijon and the Burg
 
 ## Demo
 
-📱 [Download APK for Android](https://github.com/AdrianMalmierca/frontend-evenements-dijon-api/releases)
+📱 [Download APK for Android](https://github.com/AdrianMalmierca/frontend-evenements-dijon-api/releases/latest)
 
 **Advice:** The backend runs in Render so it takes around 60 seconds to start and after 15 minutes it sleeps again, so is normal if in the first run it takes time to log in or register.
 
