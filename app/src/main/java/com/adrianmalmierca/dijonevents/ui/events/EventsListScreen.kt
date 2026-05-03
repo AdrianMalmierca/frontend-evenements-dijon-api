@@ -18,15 +18,21 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.adrianmalmierca.dijonevents.data.model.EventDto
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 
-
-@OptIn(ExperimentalMaterial3Api::class) //Because I use OutlinedTextField, so we indicate to the compiler that we know is experimental
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventsListScreen(viewModel: EventsViewModel, onNavigateToDetail: (String) -> Unit) {
+fun EventsListScreen(
+    viewModel: EventsViewModel,
+    onNavigateToDetail: (String) -> Unit
+) {
     //collectAsState: Transforms the `Flow` into a Compose State
-    val uiState by viewModel.uiState.collectAsState() //listen the vm state and give me the actual value, recharging the ui
-    var searchQuery by remember { mutableStateOf("") } //Keeps the text of the textfield as reactive and it keeps
-    
+    val uiState by viewModel.uiState.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
+    val pullToRefreshState = rememberPullToRefreshState()
+
     LaunchedEffect(Unit) {
         viewModel.loadEvents(keyword = null)
     }
@@ -36,7 +42,7 @@ fun EventsListScreen(viewModel: EventsViewModel, onNavigateToDetail: (String) ->
             value = searchQuery,
             onValueChange = {
                 searchQuery = it
-                if (it.length > 2 || it.isEmpty()) viewModel.loadEvents(it.ifEmpty { null }) //is you dont write, it returns null, otherwise, it returns the text
+                if (it.length > 2 || it.isEmpty()) viewModel.loadEvents(it.ifEmpty { null }) //if you dont write, it returns null, otherwise, it returns the text
             },
             placeholder = { Text("Rechercher un événement...") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
@@ -46,29 +52,94 @@ fun EventsListScreen(viewModel: EventsViewModel, onNavigateToDetail: (String) ->
             singleLine = true
         )
 
-        when {
-            uiState.isLoading -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) { CircularProgressIndicator() }
-
-            uiState.error != null -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) { Text(uiState.error ?: "", color = MaterialTheme.colorScheme.error) }
-
-            else -> LazyColumn(
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(uiState.events) { event ->
-                    EventCard(
-                        event = event,
-                        isFavorite = viewModel.isFavorite(event.uid),
-                        onToggleFavorite = { viewModel.toggleFavorite(event) },
-                        onNavigateToDetail = { onNavigateToDetail(event.uid) }
-                    )
+        PullToRefreshBox(
+            isRefreshing = uiState.isLoading,
+            onRefresh = {
+                searchQuery = ""
+                viewModel.loadEvents(keyword = null)
+            },
+            state = pullToRefreshState,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            when {
+                uiState.error != null -> ErrorState(
+                    message = uiState.error ?: "",
+                    onRetry = { viewModel.loadEvents(keyword = null) }
+                )
+                uiState.events.isEmpty() && !uiState.isLoading -> EmptyState(
+                    message = "Aucun événement trouvé",
+                    emoji = "🍷"
+                )
+                else -> LazyColumn(
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(uiState.events) { event ->
+                        EventCard(
+                            event = event,
+                            isFavorite = viewModel.isFavorite(event.uid),
+                            onToggleFavorite = { viewModel.toggleFavorite(event) },
+                            onNavigateToDetail = { onNavigateToDetail(event.uid) }
+                        )
+                    }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun EmptyState(message: String, emoji: String = "🔍") {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(emoji, fontSize = 52.sp)
+            Text(
+                text = message,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = "Essayez un autre mot-clé",
+                fontSize = 13.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+            )
+        }
+    }
+}
+
+@Composable
+fun ErrorState(message: String, onRetry: () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(24.dp)
+        ) {
+            Text("⚠️", fontSize = 48.sp)
+            Text(
+                text = "Impossible de charger les événements",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+            Text(
+                text = message,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+            Button(onClick = onRetry) {
+                Text("Réessayer")
             }
         }
     }

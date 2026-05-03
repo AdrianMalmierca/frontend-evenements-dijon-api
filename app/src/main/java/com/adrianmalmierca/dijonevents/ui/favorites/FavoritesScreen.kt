@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.adrianmalmierca.dijonevents.ui.events.EmptyState
 import com.adrianmalmierca.dijonevents.ui.events.EventCard
 import com.adrianmalmierca.dijonevents.ui.events.EventsViewModel
 
@@ -19,25 +20,10 @@ fun FavoritesScreen(viewModel: EventsViewModel, onNavigateToDetail: (String) -> 
     val favorites = uiState.favorites
 
     if (favorites.isEmpty()) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("🍷", fontSize = 48.sp)
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = "Aucun favori pour l'instant",
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp
-                )
-                Text(
-                    text = "Ajoutez des événements depuis la liste",
-                    fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                )
-            }
-        }
+        EmptyState(
+            message = "Aucun favori pour l'instant",
+            emoji = "🍷"
+        )
     } else {
         LazyColumn(
             contentPadding = PaddingValues(16.dp),

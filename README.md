@@ -280,7 +280,7 @@ api.getFavorites("Bearer $token")
 - **Event sharing** — share event details via Android share sheet
 
 ### Long Term
-- **iOS version** — SwiftUI companion app targeting the same backend ([Ledgerly](https://github.com/AdrianMalmierca/ledgerly) demonstrates iOS native skills)
+-✅ **iOS version** — SwiftUI companion app targeting the same backend ([Ledgerly](https://github.com/AdrianMalmierca/LedgerlyIOS) demonstrates iOS native skills)
 - **Offline-first architecture** — Room + WorkManager sync with background refresh
 - **Animations** — shared element transitions between list and detail screens
 

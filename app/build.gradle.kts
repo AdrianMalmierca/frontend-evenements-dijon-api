@@ -15,17 +15,18 @@ plugins {
 
 android {
     namespace = "com.adrianmalmierca.dijonevents"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.adrianmalmierca.dijonevents"
         minSdk = 26
-        targetSdk = 34
+        compileSdk = 35
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_URL", "\"https://evenements-dijon-api.onrender.com/\"")
+        buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8080/\"")
 
         manifestPlaceholders["MAPS_API_KEY"] = localProperties.getProperty("MAPS_API_KEY") ?: ""
     }
@@ -53,6 +54,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
