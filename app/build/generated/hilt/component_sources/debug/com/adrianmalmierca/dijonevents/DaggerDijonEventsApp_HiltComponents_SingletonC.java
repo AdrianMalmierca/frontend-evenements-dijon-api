@@ -599,7 +599,7 @@ public final class DaggerDijonEventsApp_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectDijonEventsApp(DijonEventsApp arg0) {
+    public void injectDijonEventsApp(DijonEventsApp dijonEventsApp) {
     }
 
     @Override

@@ -18,9 +18,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.adrianmalmierca.dijonevents.data.model.EventDto
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import kotlinx.coroutines.launch
+val categories = listOf("Concert", "Exposition", "Festival", "Electro", "Rock", "Pop", "Jazz", "Folk")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,10 +33,11 @@ fun EventsListScreen(
     viewModel: EventsViewModel,
     onNavigateToDetail: (String) -> Unit
 ) {
-    //collectAsState: Transforms the `Flow` into a Compose State
     val uiState by viewModel.uiState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     val pullToRefreshState = rememberPullToRefreshState()
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.loadEvents(keyword = null)
@@ -52,11 +58,40 @@ fun EventsListScreen(
             singleLine = true
         )
 
+        //Category Chip
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            item {
+                FilterChip(
+                    selected = uiState.selectedCategory == null,
+                    onClick = {
+                        viewModel.selectCategory(null)
+                        coroutineScope.launch { listState.animateScrollToItem(0) }
+                    },
+                    label = { Text("Tous") }
+                )
+            }
+            items(categories) { category ->
+                FilterChip(
+                    selected = uiState.selectedCategory == category,
+                    onClick = {
+                        viewModel.selectCategory(
+                            if (uiState.selectedCategory == category) null else category
+                        )
+                        coroutineScope.launch { listState.animateScrollToItem(0) }
+                    },
+                    label = { Text(category) }
+                )
+            }
+        }
+
         PullToRefreshBox(
             isRefreshing = uiState.isLoading,
             onRefresh = {
                 searchQuery = ""
-                viewModel.loadEvents(keyword = null)
+                viewModel.selectCategory(null)
             },
             state = pullToRefreshState,
             modifier = Modifier.fillMaxSize()
@@ -64,22 +99,24 @@ fun EventsListScreen(
             when {
                 uiState.error != null -> ErrorState(
                     message = uiState.error ?: "",
-                    onRetry = { viewModel.loadEvents(keyword = null) }
+                    onRetry = { viewModel.loadEvents() }
                 )
                 uiState.events.isEmpty() && !uiState.isLoading -> EmptyState(
                     message = "Aucun événement trouvé",
                     emoji = "🍷"
                 )
                 else -> LazyColumn(
+                    state = listState,
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(uiState.events) { event ->
+                    items(uiState.events, key = { it.uid }) { event ->
                         EventCard(
                             event = event,
                             isFavorite = viewModel.isFavorite(event.uid),
                             onToggleFavorite = { viewModel.toggleFavorite(event) },
-                            onNavigateToDetail = { onNavigateToDetail(event.uid) }
+                            onNavigateToDetail = { onNavigateToDetail(event.uid) },
+                            modifier = Modifier.animateItem() //if the list change the cards dont jump, the move soft
                         )
                     }
                 }
@@ -150,11 +187,13 @@ fun EventCard(
     event: EventDto,
     isFavorite: Boolean,
     onToggleFavorite: () -> Unit,
-    onNavigateToDetail: () -> Unit
-){
-    Card(modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onNavigateToDetail() },
+    onNavigateToDetail: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onNavigateToDetail() },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ){
         Column {

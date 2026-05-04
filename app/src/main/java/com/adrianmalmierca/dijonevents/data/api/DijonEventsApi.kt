@@ -15,8 +15,9 @@ interface DijonEventsApi {
     suspend fun getEvents(
         @Query("size") size: Int = 20,
         @Query("from") from: Int = 0,
-        @Query("keyword") keyword: String? = null
-    ): List<EventDto>
+        @Query("keyword") keyword: String? = null,
+    ): PagedEventsResponse
+
 
     @GET("api/events/{uid}")
     suspend fun getEventById(@Path("uid") uid: String): EventDto

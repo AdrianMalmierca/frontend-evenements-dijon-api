@@ -48,3 +48,12 @@ data class FavoriteRequest(
     val latitude: Double?,
     val longitude: Double?
 )
+
+@JsonClass(generateAdapter = true)
+data class PagedEventsResponse(
+    val events: List<EventDto>,
+    val total: Int,
+    val page: Int,
+    val size: Int,
+    val hasMore: Boolean
+)

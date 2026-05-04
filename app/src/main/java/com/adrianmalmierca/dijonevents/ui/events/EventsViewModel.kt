@@ -12,11 +12,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class EventsUiState( //dataclass cause we need copy
-    val events: List<EventDto> = emptyList(),
+data class EventsUiState(//dataclass cause we need copy
+    val allEvents: List<EventDto> = emptyList(), //full list without filter
+    val events: List<EventDto> = emptyList(), //filtered list
     val favorites: List<EventDto> = emptyList(),
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val selectedCategory: String? = null
 )
 
 @HiltViewModel //the vm is created by hilt and we can inject dependencies automatically
@@ -31,13 +33,19 @@ class EventsViewModel @Inject constructor(
         loadEvents()
         loadFavorites()
     }
+
     fun loadEvents(keyword: String? = null) {
         viewModelScope.launch { //coroutine linked to the lifecycle of the vm
             _uiState.value = _uiState.value.copy(isLoading = true) //spiner in the UI
             when (val result = eventRepository.getEvents(keyword = keyword)) {
-                is Result.Success -> _uiState.value = _uiState.value.copy( //copy cause the state is inmutable
-                    events = result.data, isLoading = false
-                )
+                is Result.Success -> {
+                    val filtered = applyFilter(result.data, _uiState.value.selectedCategory)
+                    _uiState.value = _uiState.value.copy( //copy cause the state is inmutable
+                        allEvents = result.data,
+                        events = filtered,
+                        isLoading = false
+                    )
+                }
                 is Result.Error -> _uiState.value = _uiState.value.copy(
                     error = result.message, isLoading = false
                 )
@@ -54,6 +62,22 @@ class EventsViewModel @Inject constructor(
             }
         }
     }
+
+    fun selectCategory(category: String?) {
+        val filtered = applyFilter(_uiState.value.allEvents, category)
+        _uiState.value = _uiState.value.copy(
+            selectedCategory = category,
+            events = filtered
+        )
+    }
+
+    private fun applyFilter(events: List<EventDto>, category: String?): List<EventDto> {
+        if (category == null) return events
+        return events.filter { event ->
+            event.categories.any { it.contains(category, ignoreCase = true) }
+        }
+    }
+
 
     fun toggleFavorite(event: EventDto) {
         viewModelScope.launch {

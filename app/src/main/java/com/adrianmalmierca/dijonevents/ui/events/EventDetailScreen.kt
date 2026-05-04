@@ -17,6 +17,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.adrianmalmierca.dijonevents.data.model.EventDto
+import android.content.Intent
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,6 +35,8 @@ fun EventDetailScreen(
     val uiState by viewModel.uiState.collectAsState()
     val event = uiState.events.find { it.uid == uid }
         ?: uiState.favorites.find { it.uid == uid }
+
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -53,23 +62,49 @@ fun EventDetailScreen(
                                 tint = MaterialTheme.colorScheme.onPrimary
                             )
                         }
+                        IconButton(onClick = {
+                            val shareText = buildString {
+                                append("🎭 ${event.title}\n")
+                                event.dateStart?.let { append("📅 ${it.take(10)}\n") }
+                                event.locationName?.let { append("📍 $it\n") }
+                                event.address?.let { append("$it\n") }
+                                append("\nDécouvrez cet événement à Dijon !")
+                            }
+                            val intent = Intent(Intent.ACTION_SEND).apply { //to indicate we want to share data
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_TEXT, shareText) //to indicate the data to share
+                            }
+                            context.startActivity(Intent.createChooser(intent, "Partager l'événement")) //we open the selector (createChooser) and we run it (startActivity)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Share,
+                                contentDescription = "Partager",
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
                     }
                 }
             )
         }
     ) { paddingValues ->
-        if (event == null) {
-            Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+        AnimatedContent(
+            targetState = event, //state that we observe, when the event change, compose redo and animate the change
+            //null → Event → content appears
+            //Event A → Event B → change with animation
+            transitionSpec = { fadeIn() togetherWith fadeOut() },
+            label = "detail_content",
+            modifier = Modifier.padding(paddingValues)
+        ) { targetEvent ->
+            if (targetEvent == null) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                EventDetailContent(event = targetEvent)
             }
-        } else {
-            EventDetailContent(
-                event = event,
-                modifier = Modifier.padding(paddingValues)
-            )
         }
     }
 }

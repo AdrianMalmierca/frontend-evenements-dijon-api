@@ -15,12 +15,12 @@ class EventRepository @Inject constructor(
 ) {
     suspend fun getEvents(size: Int = 20, keyword: String? = null): Result<List<EventDto>> {
         return try {
-            Result.Success(api.getEvents(size = size, keyword = keyword))
+            val response = api.getEvents(size = size, keyword = keyword)
+            Result.Success(response.events)
         } catch (e: Exception) {
             Result.Error(e.message ?: "Error charging the events")
         }
     }
-
     suspend fun getFavorites(): Result<List<EventDto>> {
         return try {
             val token = tokenManager.token.first() ?: return Result.Error("Not authenticated")

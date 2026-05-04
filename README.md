@@ -270,19 +270,19 @@ api.getFavorites("Bearer $token")
 ## Future Improvements
 
 ### Short Term
-- **Pull to refresh** — reload events list with swipe gesture
+- ✅ **Pull to refresh** — reload events list with swipe gesture
 - **Offline support** — cache last fetched events with Room for offline browsing
-- **Empty state illustrations** — custom illustrations for empty search results and favourites
-- **Error handling UI** — user-friendly error messages instead of raw error strings
+- ✅ **Empty state illustrations** — custom illustrations for empty search results and favourites
+- ✅ **Error handling UI** — user-friendly error messages instead of raw error strings
 
 ### Medium Term
-- **Filter by category** — chip filters for concert, exposition, sport, gastronomie
-- **Event sharing** — share event details via Android share sheet
+- ✅ **Filter by category** — chip filters for concert, exposition, sport, gastronomie
+- ✅ **Event sharing** — share event details via Android share sheet
 
 ### Long Term
--✅ **iOS version** — SwiftUI companion app targeting the same backend ([Ledgerly](https://github.com/AdrianMalmierca/LedgerlyIOS) demonstrates iOS native skills)
+- ✅ **iOS version** — SwiftUI companion app targeting the same backend ([Ledgerly](https://github.com/AdrianMalmierca/LedgerlyIOS) demonstrates iOS native skills)
 - **Offline-first architecture** — Room + WorkManager sync with background refresh
-- **Animations** — shared element transitions between list and detail screens
+- ✅ **Animations** — shared element transitions between list and detail screens
 
 ---
 
