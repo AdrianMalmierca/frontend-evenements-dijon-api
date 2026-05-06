@@ -280,6 +280,7 @@ layout notification_template_custom_big
 layout notification_template_icon_group
 layout notification_template_part_chronometer
 layout notification_template_part_time
+raw firebase_common_keep
 string androidx_startup
 string app_name
 string autofill
@@ -313,6 +314,12 @@ string common_signin_button_text_long
 string default_error_message
 string default_popup_window_title
 string dropdown_menu
+string fcm_fallback_notification_channel_label
+string gcm_defaultSenderId
+string google_api_key
+string google_app_id
+string google_crash_reporting_api_key
+string google_storage_bucket
 string in_progress
 string indeterminate
 string m3c_bottom_sheet_collapse_description
@@ -383,6 +390,7 @@ string m3c_wide_navigation_rail_close_rail
 string m3c_wide_navigation_rail_pane_title
 string navigation_menu
 string not_selected
+string project_id
 string range_end
 string range_start
 string selected

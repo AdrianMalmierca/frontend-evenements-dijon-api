@@ -30,6 +30,13 @@ import com.adrianmalmierca.dijonevents.ui.events.MapScreen
 import com.adrianmalmierca.dijonevents.ui.favorites.FavoritesScreen
 import com.adrianmalmierca.dijonevents.ui.theme.DijonEventsTheme
 import dagger.hilt.android.AndroidEntryPoint
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 
 sealed class Screen(val route: String, val label: String) {
     object Login : Screen("login", "Connexion")
@@ -58,6 +65,8 @@ fun DijonEventsNavHost() {
     val authViewModel: AuthViewModel = hiltViewModel()
     val eventsViewModel: EventsViewModel = hiltViewModel()
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
+
+    val context = LocalContext.current
 
     val bottomNavItems = listOf(
         Triple(Screen.Events, Icons.Default.List, "Événements"),
@@ -126,6 +135,23 @@ fun DijonEventsNavHost() {
             }
         }
     ) { paddingValues ->
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionLauncher = rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { _ -> }
+
+            LaunchedEffect(Unit) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+        }
+
         NavHost( //to define which screens exist and which one is shown depending the actual route
             navController = navController,
             startDestination = if (isLoggedIn) Screen.Events.route else Screen.Login.route,

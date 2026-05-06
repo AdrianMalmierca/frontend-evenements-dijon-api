@@ -57,3 +57,8 @@ data class PagedEventsResponse(
     val size: Int,
     val hasMore: Boolean
 )
+
+@JsonClass(generateAdapter = true)
+data class FcmTokenRequest(
+    val token: String
+)

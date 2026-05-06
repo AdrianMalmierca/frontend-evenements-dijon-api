@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.google.firebase.messaging.FirebaseMessaging
 
 data class AuthUiState(
     val isLoading: Boolean = false,
@@ -38,13 +39,27 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = AuthUiState(isLoading = true)
             when (val result = authRepository.login(email, password)) {
-                is Result.Success -> _uiState.value = AuthUiState(success = true, isLoading = false)
-                is Result.Error -> _uiState.value =_uiState.value.copy(
-                    error = result.message, isLoading = false
-                )
+                is Result.Success -> {
+                    _uiState.value = AuthUiState(success = true)
+                    sendFcmTokenToBackend()
+                }
+                is Result.Error -> _uiState.value = AuthUiState(error = result.message)
                 else -> {}
             }
         }
+    }
+
+    private fun sendFcmTokenToBackend() {
+        FirebaseMessaging.getInstance().token
+            .addOnSuccessListener { fcmToken ->
+                println("FCM Token obtenido: $fcmToken")
+                viewModelScope.launch {
+                    authRepository.updateFcmToken(fcmToken)
+                }
+            }
+            .addOnFailureListener { e ->
+                println("Error obteniendo FCM token: ${e.message}")
+            }
     }
 
     fun register(name: String, email: String, password: String) {

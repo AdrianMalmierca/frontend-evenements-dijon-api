@@ -25,6 +25,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import kotlinx.coroutines.launch
+
 val categories = listOf("Concert", "Exposition", "Festival", "Electro", "Rock", "Pop", "Jazz", "Folk")
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,6 +93,7 @@ fun EventsListScreen(
             onRefresh = {
                 searchQuery = ""
                 viewModel.selectCategory(null)
+                coroutineScope.launch { listState.animateScrollToItem(0) }
             },
             state = pullToRefreshState,
             modifier = Modifier.fillMaxSize()

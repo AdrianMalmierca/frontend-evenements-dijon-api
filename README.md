@@ -5,6 +5,7 @@
 ![Hilt](https://img.shields.io/badge/Hilt-2.51-DD4B39?style=flat-square&logo=google)
 ![Retrofit](https://img.shields.io/badge/Retrofit-2.11-48B983?style=flat-square)
 ![Google Maps](https://img.shields.io/badge/Google_Maps-SDK-4285F4?style=flat-square&logo=google-maps)
+![Firebase](https://img.shields.io/badge/Firebase-FCM-FFCA28?style=flat-square&logo=firebase)
 ![Min SDK](https://img.shields.io/badge/Min_SDK-26_(Android_8.0)-brightgreen?style=flat-square)
 
 Native Android application for discovering cultural events in Dijon and the Burgundy region. Built with Kotlin and Jetpack Compose, following MVVM architecture with Hilt dependency injection.
@@ -15,52 +16,53 @@ Native Android application for discovering cultural events in Dijon and the Burg
 
 📱 [Download APK for Android](https://github.com/AdrianMalmierca/frontend-evenements-dijon-api/releases/latest)
 
-**Advice:** The backend runs in Render so it takes around 60 seconds to start and after 15 minutes it sleeps again, so is normal if in the first run it takes time to log in or register.
+**Advice:** The backend runs on Render so it takes around 60 seconds to start and after 15 minutes of inactivity it sleeps again, so it is normal if the first login or register takes time.
 
-> Enable **Unknown sources** in Settings → Security before installing. 
+> Enable **Unknown sources** in Settings → Security before installing.
 
 ---
 
 ## Screenshots
-### Login screen
-The first you'll see when you open the app is the login page, where you have to put your email and password to access to your account. Here you can go to the sign up in case you dont have an account.
 
-<img src="assets/login.png" alt="Main" width="300"/>
+### Login screen
+The first thing you'll see when you open the app is the login page, where you have to put your email and password to access your account. Here you can go to sign up in case you don't have an account.
+
+<img src="assets/login.png" alt="Login" width="300"/>
 
 ### Signup screen
-If you're not logged, you'll have to create an account putting your name, email and password.
+If you're not logged in, you'll have to create an account by entering your name, email and password.
 
-<img src="assets/register.png" alt="Main" width="300"/>
+<img src="assets/register.png" alt="Register" width="300"/>
 
 ### Main screen
-This is the main page where you can see all the events.
+This is the main page where you can see all the events. Use the category chips to filter by genre, or the search bar to find a specific event.
 
 <img src="assets/Main.png" alt="Main" width="300"/>
 
 ### Detail screen
-When you click on a card, you can see all the information about an event.
+When you click on a card, you can see all the information about an event. You can also share it or add it to your favourites — adding a favourite triggers a push notification.
 
 <img src="assets/Detail.png" alt="Detail" width="300"/>
 
 ### Favourites screen
-You can see all your events added to favourites in the page Favourites.
+You can see all your events added to favourites in the Favourites page.
 
-<img src="assets/Favs.png" alt="Favourite" width="300"/>
+<img src="assets/Favs.png" alt="Favourites" width="300"/>
 
 ### Search screen
-You can search an event by name.
+You can search for an event by name.
 
 <img src="assets/Search.png" alt="Search" width="300"/>
 
 ### Map screen
-You can see more visual where are the events. Don't appear all the events cause some of them dont have latitude and/or longitud, so we can't locate those events in the map.
+You can see visually where the events are located. Not all events appear on the map as some of them don't have GPS coordinates in the OpenAgenda data.
 
 <img src="assets/Map.png" alt="Map" width="300"/>
 
 ### Map screen detail
-If you click on one of the points in the map, you'll see the informatión of that event.
+If you click on one of the markers on the map, you'll see the information for that event.
 
-<img src="assets/Mapdetail.png" alt="Map" width="300"/>
+<img src="assets/Mapdetail.png" alt="Map detail" width="300"/>
 
 ---
 
@@ -72,7 +74,8 @@ Dijon Événements solves this by providing a clean native Android app that:
 - Aggregates real events from the Dijon Métropole OpenAgenda feed via a dedicated backend
 - Shows events on an interactive map centred on Dijon with GPS markers
 - Lets authenticated users save favourite events that persist across sessions
-- Provides keyword search to quickly find relevant events
+- Provides keyword search and category filters to quickly find relevant events
+- Sends push notifications when a favourite event is added
 
 ---
 
@@ -81,8 +84,10 @@ Dijon Événements solves this by providing a clean native Android app that:
 ### Events
 - Browse real cultural events from Dijon and Burgundy
 - Search events by keyword in real time
+- Filter events by category via horizontal chip row (Concert, Rock, Pop, Electro, Folk, Jazz…)
+- Pull to refresh to reload the latest events
 - Tap any event card to see full details: description, location, date, address, categories
-- Pull event images from the OpenAgenda CDN
+- Share any event via the Android share sheet
 
 ### Map
 - Interactive Google Maps view centred on Dijon
@@ -93,12 +98,20 @@ Dijon Événements solves this by providing a clean native Android app that:
 - Authenticated users can save and remove favourite events
 - Favourites persisted in the backend and restored on each login
 - Dedicated Favourites tab with the same card UI as the main list
+- Push notification received when a favourite is added
 
 ### Authentication
 - Register and login with email and password
 - JWT token stored securely in DataStore Preferences
 - Automatic session restoration on app launch
 - Logout clears the local token and redirects to login
+- FCM token sent to backend after each login for push notification delivery
+
+### Push Notifications
+- Firebase Cloud Messaging integration
+- FCM token registered with the backend after login
+- Notification received on device when a favourite event is added
+- Notification permission requested at first launch (Android 13+)
 
 ---
 
@@ -116,6 +129,7 @@ Dijon Événements solves this by providing a clean native Android app that:
 | Auth persistence | DataStore Preferences | Replacement for SharedPreferences, coroutine-native |
 | Maps | Maps Compose + Play Services Maps | Native Google Maps in Compose |
 | Images | Coil | Coroutine-native image loading for Compose |
+| Push Notifications | Firebase Cloud Messaging | Real-time push notifications via FCM |
 | Theme | Material 3 | Modern Material You design system |
 | Min SDK | 26 (Android 8.0) | Covers ~95% of active Android devices |
 
@@ -126,45 +140,47 @@ Dijon Événements solves this by providing a clean native Android app that:
 ```
 dijon-events-android/
 ├── app/src/main/java/com/adrianmalmierca/dijonevents/
-│   ├── DijonEventsApp.kt                   #Hilt Application class
-│   ├── MainActivity.kt                     #Entry point + Navigation host
+│   ├── DijonEventsApp.kt                       # Hilt Application class
+│   ├── DijonFirebaseMessagingService.kt         # FCM token registration + notification display
+│   ├── MainActivity.kt                         # Entry point + Navigation host + notification permission
 │   ├── data/
 │   │   ├── api/
-│   │   │   └── DijonEventsApi.kt           #Retrofit interface
+│   │   │   └── DijonEventsApi.kt               # Retrofit interface (includes FCM token endpoint)
 │   │   ├── model/
-│   │   │   └── Models.kt                   #DTOs (EventDto, AuthResponse, etc.)
+│   │   │   └── Models.kt                       # DTOs (EventDto, AuthResponse, FcmTokenRequest…)
 │   │   └── repository/
-│   │       ├── AuthRepository.kt           #Login/register logic
-│   │       ├── EventRepository.kt          #Events and favourites logic
-│   │       └── TokenManager.kt             #JWT persistence via DataStore
+│   │       ├── AuthRepository.kt               # Login/register + FCM token update
+│   │       ├── EventRepository.kt              # Events and favourites logic
+│   │       └── TokenManager.kt                 # JWT persistence via DataStore
 │   ├── di/
-│   │   └── AppModule.kt                    #Hilt module (Retrofit, Moshi, OkHttp)
+│   │   └── AppModule.kt                        # Hilt module (Retrofit, Moshi, OkHttp)
 │   ├── ui/
 │   │   ├── auth/
-│   │   │   ├── AuthViewModel.kt            #Login/register state
-│   │   │   ├── LoginScreen.kt              #Login form
-│   │   │   └── RegisterScreen.kt           #Registration form
+│   │   │   ├── AuthViewModel.kt                # Login/register state + FCM token send after login
+│   │   │   ├── LoginScreen.kt                  # Login form
+│   │   │   └── RegisterScreen.kt               # Registration form
 │   │   ├── events/
-│   │   │   ├── EventsViewModel.kt          #Events + favourites state
-│   │   │   ├── EventsListScreen.kt         #Main event list with search
-│   │   │   ├── EventDetailScreen.kt        #Full event detail view
-│   │   │   └── MapScreen.kt               #Google Maps with event markers
+│   │   │   ├── EventsViewModel.kt              # Events + favourites state + category filter
+│   │   │   ├── EventsListScreen.kt             # Main event list with search + category chips + pull to refresh
+│   │   │   ├── EventDetailScreen.kt            # Full event detail + share button + animated content
+│   │   │   └── MapScreen.kt                    # Google Maps with event markers
 │   │   ├── favorites/
-│   │   │   └── FavoritesScreen.kt          #User's saved events
+│   │   │   └── FavoritesScreen.kt              # User's saved events
 │   │   └── theme/
-│   │       └── Theme.kt                    #Burgundy/cream Material 3 theme
+│   │       └── Theme.kt                        # Burgundy/cream Material 3 theme
 │   └── util/
-│       └── Result.kt                       #Sealed class for async states
+│       └── Result.kt                           # Sealed class for async states
 ├── app/src/main/res/
 │   ├── values/
 │   │   ├── strings.xml
 │   │   └── themes.xml
 │   └── xml/
-│       └── network_security_config.xml     #Allow HTTP to local backend
-├── app/build.gradle.kts                    #App-level Gradle config
-├── gradle/libs.versions.toml               #Version catalog
-├── local.properties.example               #API keys template
-└── build.gradle.kts                        #Root Gradle config
+│       └── network_security_config.xml         # Allow HTTP to local backend
+├── app/google-services.json                    # Firebase config (not in Git)
+├── app/build.gradle.kts                        # App-level Gradle config
+├── gradle/libs.versions.toml                   # Version catalog
+├── local.properties.example                    # API keys template
+└── build.gradle.kts                            # Root Gradle config
 ```
 
 ---
@@ -176,18 +192,19 @@ dijon-events-android/
 - Android SDK with API 26+
 - A running instance of [evenements-dijon-api](https://github.com/AdrianMalmierca/evenements-dijon-api)
 - A Google Maps API key ([obtain here](https://console.cloud.google.com))
+- A Firebase project with `google-services.json` (for push notifications)
 
 ```bash
-#Clone the repository
+# Clone the repository
 git clone https://github.com/AdrianMalmierca/frontend-evenements-dijon-api
 cd frontend-evenements-dijon-api
 
-#Set up local properties
+# Set up local properties
 cp local.properties.example local.properties
-#Fill in sdk.dir and MAPS_API_KEY
+# Fill in sdk.dir and MAPS_API_KEY
 ```
 
-Open the project in Android Studio and let Gradle sync.
+Place your `google-services.json` from Firebase Console inside `app/`. Open the project in Android Studio and let Gradle sync.
 
 ### Environment Variables
 
@@ -244,6 +261,12 @@ Moshi with Kotlin Codegen generates adapters at compile time rather than using r
 ### Single Activity + Navigation Compose
 The entire app runs in a single `MainActivity`. Navigation between screens is handled by `NavHost` with type-safe route definitions. The bottom navigation bar and top bar are rendered in the `Scaffold` at the root level and conditionally shown based on the current route.
 
+### Client-side Category Filtering
+Rather than relying on the backend to filter events by category (which proved unreliable due to inconsistent keyword casing in the OpenAgenda data), categories are filtered client-side in the `ViewModel`. This is faster for the user, removes a network round-trip, and is more robust against schema variations in the upstream API.
+
+### FCM Token Sent on Login
+The FCM token is obtained from Firebase and sent to the backend immediately after a successful login. This ensures the backend always has a fresh, valid token for the authenticated user — even if the token rotates between sessions.
+
 ### Material 3 with Burgundy Theme
 The colour palette was chosen to reflect the Burgundy/Dijon identity — a deep burgundy primary (`#7B1C2E`) with a gold accent (`#D4AF37`) on a warm cream background. This gives the app a distinctive regional character that reinforces the portfolio positioning.
 
@@ -256,7 +279,9 @@ The app communicates exclusively with the `dijon-events-api` backend. All OpenAg
 ```
 Android App ──► dijon-events-api ──► OpenAgenda
                      │
-                     └──► PostgreSQL (users, favourites)
+                     ├──► PostgreSQL (users, favourites, FCM tokens)
+                     │
+                     └──► Firebase FCM ──► Push Notification
 ```
 
 Authentication headers are added per-request in the repository layer using the JWT token from DataStore:
@@ -271,18 +296,17 @@ api.getFavorites("Bearer $token")
 
 ### Short Term
 - ✅ **Pull to refresh** — reload events list with swipe gesture
-- **Offline support** — cache last fetched events with Room for offline browsing
 - ✅ **Empty state illustrations** — custom illustrations for empty search results and favourites
 - ✅ **Error handling UI** — user-friendly error messages instead of raw error strings
 
 ### Medium Term
-- ✅ **Filter by category** — chip filters for concert, exposition, sport, gastronomie
+- ✅ **Filter by category** — chip filters for Concert, Rock, Pop, Electro, Folk, Jazz…
 - ✅ **Event sharing** — share event details via Android share sheet
+- ✅ **Push notifications** — FCM token registered after login, notification on favourite added
 
 ### Long Term
 - ✅ **iOS version** — SwiftUI companion app targeting the same backend ([Ledgerly](https://github.com/AdrianMalmierca/LedgerlyIOS) demonstrates iOS native skills)
-- **Offline-first architecture** — Room + WorkManager sync with background refresh
-- ✅ **Animations** — shared element transitions between list and detail screens
+- ✅ **Animations** — fade and slide transitions on list and detail screens
 
 ---
 
@@ -300,8 +324,14 @@ Keeping the bottom navigation bar in sync with the current route requires using 
 ### Google Maps in Compose
 The `maps-compose` library wraps the native `MapView` in a Composable, but lifecycle management is non-trivial. The map must be initialised with the correct `LifecycleOwner` and the `CameraPositionState` must be remembered at the composable level to survive recomposition.
 
+### Firebase Cloud Messaging in Hilt
+Injecting Hilt dependencies into a `FirebaseMessagingService` requires annotating the service with `@AndroidEntryPoint`. The `onNewToken` callback only fires on token rotation — for initial token delivery, `FirebaseMessaging.getInstance().token` must be called explicitly after login.
+
 ### Retrofit and Coroutines
 Retrofit 2.6+ supports `suspend` functions natively — no need for `Call<T>` wrappers. Wrapping each API call in a `try/catch` inside the repository and returning a sealed `Result<T>` class gives the ViewModel a clean way to handle success, error, and loading states without exposing exceptions to the UI layer.
+
+### Android 13 Notification Permission
+From Android 13 (API 33) onwards, apps must explicitly request `POST_NOTIFICATIONS` permission at runtime. Without it, push notifications are silently blocked — the FCM token is registered, the backend sends the message, but nothing appears on the device.
 
 ---
 

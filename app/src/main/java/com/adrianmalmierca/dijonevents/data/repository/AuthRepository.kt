@@ -1,9 +1,11 @@
 package com.adrianmalmierca.dijonevents.data.repository
 
 import com.adrianmalmierca.dijonevents.data.api.DijonEventsApi
+import com.adrianmalmierca.dijonevents.data.model.FcmTokenRequest
 import com.adrianmalmierca.dijonevents.data.model.LoginRequest
 import com.adrianmalmierca.dijonevents.data.model.RegisterRequest
 import com.adrianmalmierca.dijonevents.util.Result
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,5 +36,17 @@ class AuthRepository @Inject constructor(
 
     suspend fun logout() {
         tokenManager.clearAuth()
+    }
+
+    suspend fun updateFcmToken(fcmToken: String) {
+        try {
+            val token = tokenManager.token.first() ?: return
+            api.updateFcmToken(
+                token = "Bearer $token",
+                request = FcmTokenRequest(fcmToken)
+            )
+        } catch (e: Exception) {
+            println("Error updating FCM token: ${e.message}")
+        }
     }
 }

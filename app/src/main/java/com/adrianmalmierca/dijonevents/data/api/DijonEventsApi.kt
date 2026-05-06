@@ -36,4 +36,10 @@ interface DijonEventsApi {
         @Header("Authorization") token: String,
         @Path("uid") uid: String
     )
+
+    @POST("api/events/fcm-token")
+    suspend fun updateFcmToken(
+        @Header("Authorization") token: String,
+        @Body request: FcmTokenRequest
+    )
 }

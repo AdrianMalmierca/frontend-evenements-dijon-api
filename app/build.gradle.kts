@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.services)  // ← añade esto
 }
 
 android {
@@ -89,8 +90,12 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
-    // Coil (imágenes)
+    // Coil (images)
     implementation(libs.coil.compose)
 
     debugImplementation(libs.androidx.ui.tooling)
+
+    //firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation(libs.firebase.messaging)
 }

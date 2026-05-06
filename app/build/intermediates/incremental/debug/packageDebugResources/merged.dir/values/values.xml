@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Dijon Événements</string>
+    <string name="gcm_defaultSenderId" translatable="false">101122503131</string>
+    <string name="google_api_key" translatable="false">AIzaSyCal_ANSkPN_6cQl8hTOjvvxOeinqX12pQ</string>
+    <string name="google_app_id" translatable="false">1:101122503131:android:f18f14a938793db720b7fe</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCal_ANSkPN_6cQl8hTOjvvxOeinqX12pQ</string>
+    <string name="google_storage_bucket" translatable="false">dijonevents-9bc12.firebasestorage.app</string>
+    <string name="project_id" translatable="false">dijonevents-9bc12</string>
     <style name="Theme.DijonEvents" parent="android:Theme.Material.Light.NoActionBar"/>
 </resources>

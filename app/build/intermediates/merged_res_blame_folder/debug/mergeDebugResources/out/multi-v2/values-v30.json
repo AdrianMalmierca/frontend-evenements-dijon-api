@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.adrianmalmierca.dijonevents.app-mergeDebugResources-63:/values-v30/values-v30.xml",
+            "outputFile": "com.adrianmalmierca.dijonevents.app-mergeDebugResources-66:/values-v30/values-v30.xml",
             "map": [
                 {
-                    "source": "/Users/administrador/.gradle/caches/transforms-4/8b9012cbeec9b7486d19b0d1be2647a1/transformed/jetified-material3/res/values-v30/values-v30.xml",
+                    "source": "/Users/administrador/.gradle/caches/transforms-4/9e3e0d72441db334efb44e8a8954be30/transformed/jetified-material3/res/values-v30/values-v30.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
