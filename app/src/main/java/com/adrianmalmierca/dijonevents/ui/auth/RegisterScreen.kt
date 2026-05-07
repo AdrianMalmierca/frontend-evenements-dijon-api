@@ -89,6 +89,14 @@ fun RegisterScreen(
             Text("Déjà un compte ? Se connecter")
         }
 
+        Text(
+            text = "⚠️ Le serveur peut mettre jusqu'à 60 secondes à démarrer lors de la première connexion.",
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
+
         uiState.error?.let { error ->
             Spacer(modifier = Modifier.height(8.dp))
             Text(error, color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
