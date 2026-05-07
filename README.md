@@ -20,6 +20,12 @@ Native Android application for discovering cultural events in Dijon and the Burg
 
 > Enable **Unknown sources** in Settings → Security before installing.
 
+## Architecture
+
+<img src="assets/architecture.svg" alt="Map detail" width="600"/>
+
+> See also: [evenements-dijon-api](https://github.com/AdrianMalmierca/evenements-dijon-api) — the backend in Kotlin.
+
 ---
 
 ## Screenshots
