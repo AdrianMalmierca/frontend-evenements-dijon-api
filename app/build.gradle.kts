@@ -27,7 +27,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_URL", "\"https://dijon-events-api.onrender.com/\"")
+        buildConfigField("String", "BASE_URL", "\"https://evenements-dijon-api.onrender.com/\"")
 
         manifestPlaceholders["MAPS_API_KEY"] = localProperties.getProperty("MAPS_API_KEY") ?: ""
     }

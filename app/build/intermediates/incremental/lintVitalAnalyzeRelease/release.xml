@@ -2,11 +2,11 @@
     name="release"
     package="com.adrianmalmierca.dijonevents"
     minSdkVersion="26"
-    targetSdkVersion="34"
+    targetSdkVersion="35"
     mergedManifest="build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml"
-    proguardFiles="build/intermediates/default_proguard_files/global/proguard-android-optimize.txt-8.5.2:proguard-rules.pro"
+    proguardFiles="build/intermediates/default_proguard_files/global/proguard-android-optimize.txt-8.6.0:proguard-rules.pro"
     partialResultsDir="build/intermediates/lint_vital_partial_results/release/lintVitalAnalyzeRelease/out"
-    desugaredMethodsFiles="/Users/administrador/.gradle/caches/transforms-4/a5e17859bb19b74b5a3b62449f8d3035/transformed/D8BackportedDesugaredMethods.txt">
+    desugaredMethodsFiles="/Users/administrador/.gradle/caches/transforms-4/135407e4419aaefc7f8388d11f0b107c/transformed/D8BackportedDesugaredMethods.txt">
   <buildFeatures
       namespacing="REQUIRED"/>
   <sourceProviders>
@@ -30,7 +30,7 @@
       type="MAIN"
       applicationId="com.adrianmalmierca.dijonevents"
       generatedSourceFolders="build/generated/ksp/release/java:build/generated/ksp/release/kotlin:build/generated/ap_generated_sources/release/out:build/generated/source/buildConfig/release"
-      generatedResourceFolders="build/generated/res/resValues/release"
-      desugaredMethodsFiles="/Users/administrador/.gradle/caches/transforms-4/a5e17859bb19b74b5a3b62449f8d3035/transformed/D8BackportedDesugaredMethods.txt">
+      generatedResourceFolders="build/generated/res/processReleaseGoogleServices:build/generated/res/resValues/release"
+      desugaredMethodsFiles="/Users/administrador/.gradle/caches/transforms-4/135407e4419aaefc7f8388d11f0b107c/transformed/D8BackportedDesugaredMethods.txt">
   </artifact>
 </variant>

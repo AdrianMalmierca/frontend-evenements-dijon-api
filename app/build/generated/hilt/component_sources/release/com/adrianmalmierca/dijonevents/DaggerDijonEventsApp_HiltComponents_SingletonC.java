@@ -19,6 +19,7 @@ import com.adrianmalmierca.dijonevents.ui.auth.AuthViewModel;
 import com.adrianmalmierca.dijonevents.ui.auth.AuthViewModel_HiltModules;
 import com.adrianmalmierca.dijonevents.ui.events.EventsViewModel;
 import com.adrianmalmierca.dijonevents.ui.events.EventsViewModel_HiltModules;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.squareup.moshi.Moshi;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.ViewModelLifecycle;
@@ -397,15 +398,15 @@ public final class DaggerDijonEventsApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_adrianmalmierca_dijonevents_ui_events_EventsViewModel = "com.adrianmalmierca.dijonevents.ui.events.EventsViewModel";
-
       static String com_adrianmalmierca_dijonevents_ui_auth_AuthViewModel = "com.adrianmalmierca.dijonevents.ui.auth.AuthViewModel";
 
-      @KeepFieldType
-      EventsViewModel com_adrianmalmierca_dijonevents_ui_events_EventsViewModel2;
+      static String com_adrianmalmierca_dijonevents_ui_events_EventsViewModel = "com.adrianmalmierca.dijonevents.ui.events.EventsViewModel";
 
       @KeepFieldType
       AuthViewModel com_adrianmalmierca_dijonevents_ui_auth_AuthViewModel2;
+
+      @KeepFieldType
+      EventsViewModel com_adrianmalmierca_dijonevents_ui_events_EventsViewModel2;
     }
   }
 
@@ -560,6 +561,19 @@ public final class DaggerDijonEventsApp_HiltComponents_SingletonC {
 
 
     }
+
+    @Override
+    public void injectDijonFirebaseMessagingService(DijonFirebaseMessagingService arg0) {
+      injectDijonFirebaseMessagingService2(arg0);
+    }
+
+    @CanIgnoreReturnValue
+    private DijonFirebaseMessagingService injectDijonFirebaseMessagingService2(
+        DijonFirebaseMessagingService instance) {
+      DijonFirebaseMessagingService_MembersInjector.injectApi(instance, singletonCImpl.provideApiProvider.get());
+      DijonFirebaseMessagingService_MembersInjector.injectTokenManager(instance, singletonCImpl.tokenManagerProvider.get());
+      return instance;
+    }
   }
 
   private static final class SingletonCImpl extends DijonEventsApp_HiltComponents.SingletonC {
@@ -599,7 +613,7 @@ public final class DaggerDijonEventsApp_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectDijonEventsApp(DijonEventsApp dijonEventsApp) {
+    public void injectDijonEventsApp(DijonEventsApp arg0) {
     }
 
     @Override
