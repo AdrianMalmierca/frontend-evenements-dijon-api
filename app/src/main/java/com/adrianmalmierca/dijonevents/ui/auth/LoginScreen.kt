@@ -83,7 +83,7 @@ fun LoginScreen(
         }
 
         Text(
-            text = "⚠️ Le serveur peut mettre jusqu'à 60 secondes à démarrer lors de la première connexion.",
+            text = "⚠️ Le serveur peut mettre jusqu'à 90 secondes à démarrer lors de la première connexion.",
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
             textAlign = androidx.compose.ui.text.style.TextAlign.Center,

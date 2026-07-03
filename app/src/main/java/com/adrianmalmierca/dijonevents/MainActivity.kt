@@ -188,7 +188,7 @@ fun DijonEventsNavHost() {
                 route = "detail/{uid}",
                 arguments = listOf(navArgument("uid") { type = NavType.StringType })
             ) { backStackEntry ->
-                //takes the uid from the url, si es null, sales del composable
+                //takes the uid from the url, if its null, you go out of the argument
                 val uid = backStackEntry.arguments?.getString("uid") ?: return@composable
                 EventDetailScreen(
                     uid = uid,

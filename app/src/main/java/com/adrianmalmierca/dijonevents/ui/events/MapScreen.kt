@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.sp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
+import com.adrianmalmierca.dijonevents.data.model.EventDto
 
 private val DijonCenter = LatLng(47.3220, 5.0415)
 
@@ -20,13 +21,13 @@ fun MapScreen(viewModel: EventsViewModel) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(DijonCenter, 13f)
     }
-    var selectedEvent by remember { mutableStateOf<com.adrianmalmierca.dijonevents.data.model.EventDto?>(null) }
+    var selectedEvent by remember { mutableStateOf<EventDto?>(null) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
-            properties = MapProperties(isMyLocationEnabled = false)
+            properties = MapProperties(isMyLocationEnabled = true)
         ) {
             uiState.events
                 .filter { it.latitude != null && it.longitude != null }

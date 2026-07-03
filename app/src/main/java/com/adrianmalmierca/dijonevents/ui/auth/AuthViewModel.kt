@@ -52,13 +52,13 @@ class AuthViewModel @Inject constructor(
     private fun sendFcmTokenToBackend() {
         FirebaseMessaging.getInstance().token
             .addOnSuccessListener { fcmToken ->
-                println("FCM Token obtenido: $fcmToken")
+                println("FCM Token: $fcmToken")
                 viewModelScope.launch {
                     authRepository.updateFcmToken(fcmToken)
                 }
             }
             .addOnFailureListener { e ->
-                println("Error obteniendo FCM token: ${e.message}")
+                println("Error getting the token: ${e.message}")
             }
     }
 
